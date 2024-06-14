@@ -1,0 +1,437 @@
+SHELL SCRIPT:
+-------------
+
+1) start with #!/bin/bash and use ###to give metadata like info about script and author.
+
+2) varibles: to reduce the repitition and avoid to touch the main script. eg: PERSON1=chandu
+
+3) arguments/parameters: use PERSON1=$1 to enter the parameters manually. eg: sh varibles.sh chandu john till nth varible(enter values while executing the script)
+
+4) Invisible user name and passwod
+echo "Please enter your username::"
+
+read -s USERNAME   #user name is variable
+
+echo "Please enter your Password::"
+
+read -s PASSWORD
+
+echo "Username is: $USERNAME, Password is $PASSWORD"
+* without -s credentials are visible and with -s credentials are not visible.
+
+5) Array: 
+THINGS=("ant" "bat" "cat")
+# size of array is 3
+# list always starts with 0
+# index are 0,1 and 2
+
+echo "First movie is: ${THINGS[0]}"
+echo "all the things are: ${THINGS[@]}
+
+* array --> list of values like THINGS. To print a particular num of array we can do that by using array.
+* use ${THINGS[@]} to print all the list of array.
+
+6) sum operation
+NO1=$1
+NO2=$2
+
+SUM=$(($NO1+$NO2))
+echo "Total of $NO1 and $NO2 is: $SUM"
+
+* Enter values while executing sh sum.sh 100 200
+
+7) Special varibles
+
+echo "All variables: $@"
+echo "Number of variables passed: $#"
+echo "Script name: $0"
+echo "Current working directory: $PWD"
+echo "Home directory of current user: $HOME"
+echo "Which user is running this script: $USER"
+echo "Host name: $HOSTNAME"
+echo "Process id of the current shell script: $$"
+sleep 65
+echo "Process ID of last background command: $!"
+echo "exit status of the last command executed: $?"
+
+
+GIT and GIT HUB:
+----------------
+
+1) authenticate git hub with linux using token 
+--> git remote set-url origin https://token@github.com/chandureddy08/examgit.git
+
+
+
+Ansible:
+---------
+   Remote login needs passwod or key based on server authentication.
+
+1) remote login to particular server --> ssh centos@172.58.42.61 -C "echo Hi, from RHEL 9 > /tmp/hi.txt"
+   it will create login ,creates a file hi.txt.
+
+2) Installation on remote server --> ssh centos@172.58.42.61 -C "curl https://raw.githubusercontent.com/daws-78s/expense-shell/main/mysql.sh | sudo bash"
+   it will create login and execute that particular script.
+
+3) Adhoc commands used urgency purpose as well as little installations
+
+--> ansible -i 172.58.42.61, all -e ansible_user=ec2-user -e ansible_password=DevOps321 -m ping
+     TO know whether server is reachable or not as well as to check credentials.
+	
+--> ansible -i 172.58.42.61, all -e ansible_user=ec2-user -e ansible_password=DevOps321 -m dnf -a "name=nginx state=installed"
+	 To install nginx on node server but needs root acces so,
+
+--> -b become root(it gives root access to adhoc commands)
+
+--> ansible -i 172.58.42.61, all -e ansible_user=ec2-user -e ansible_password=DevOps321 -m dnf -a "name=nginx state=installed" -b
+	 To install nginx on node server
+
+--> ansible -i 172.58.42.61, all -e ansible_user=ec2-user -e ansible_password=DevOps321 -m service -a "name=nginx state=started" -b
+     To start nginx server
+	 
+Adhoc commands = manual way (shell commands)
+ansible-playbook = keep all your modules in a single file with yaml syntax. Run that file(shell script)
+
+YAML --> yet another markup language
+
+starts with ---
+
+DTO --> data transfer objects
+
+
+XML --> Extensive markup language
+---------------------------------
+<user>
+	<username>chandrareddy</username>
+	<password>admin123</password>
+</user>
+
+
+JSON --> java script object notation
+------------------------------------
+[] --> denotes list
+
+{	"Username": "ChandraReddy",
+	"Password": "admin123",
+	"Contact Details": [
+	{	"House No": 100
+		"Street": "Highway steet"
+		"province": "Ontario"
+		"Country": "Canada"
+}
+
+4) Ansible needs inventory file to save host's ip's. we can save multiple server.
+
+5) ansible-playbook -i inventory.ini -e ansible_user=ec2-user -e ansible_password=DevOps321 01-ping.yaml
+   TO execute a yaml playbook on single host by using user name and password
+
+6) ansible-playbook -vvv -i inventory.ini -e ansible_user=ec2-user -e ansible_password=DevOps321 01-ping.yaml
+   Add -vvv to debug the ansible while executing.
+ 
+7) 
+
+
+
+
+
+
+
+
+ansible backend -i inventory.ini -e "ansible_user=ec2-user" -e "ansible_ssh_pass=DevOps321" -b -a "sudo systemctl restart backend"
+
+
+
+
+
+
+
+
+
+
+
+
+
+Route-53:
+---------
+
+DNS and types of records and usage:
+----------------------------------
+
+The domain name system, or DNS, is a global system responsible for mapping human-readable hostnames to their corresponding Internet Protocol (IP) addresses. For example, if you want to access a website using a domain name like example.com, that domain name must point to a valid IP address.
+
+The human-readable hostname is a string of words that are easy to remember. IP addresses (IPV4), on the other hand, contain numbers separated by dots and are harder to remember. In our example above, example.com is the human-readable hostname or domain name, while 93.184.216.34 is the current IP address for example.com. Also, note that the IP address associated with a domain name may change depending on the server hosting the website.
+
+Multiple components make up the domain name system, and DNS record types are an important part of the system. A DNS resolver does the actual work of finding the correct IP address for a hostname.
+
+In this post, you'll learn about various DNS record types and see examples of how each record type works.
+
+We'll start by defining what DNS record types are.
+
+What are DNS record types?
+DNS record types are records that provide important information about a hostname or domain. These records include the current IP address for a domain.
+
+Also, DNS records are stored in text files (zone files) on the authoritative DNS server. The content of a DNS record file is a string with special commands that the DNS server understands.
+
+DNS record types
+The following are the five major DNS record types:
+
+A record
+AAAA record
+CNAME record
+Nameserver (NS) record
+Mail exchange (MX) record
+The use for each of the above types varies. So let's look at more details about each DNS record type.
+
+1. A record
+The A record is the most important DNS record type. The "A" in A record stands for "address." An A record shows the IP address for a specific hostname or domain. For example, a DNS record lookup for the domain example.com returns the following result:
+
+Fig. 1: DNS record lookup result.
+Fig. 1: DNS record lookup result.
+From figure 1 above, we can see that the current IP address is 93.184.216.34. The A record only supports IPV4 addresses. Later in this post, we'll see how to point a domain to an IPV6 address using another DNS record type.
+
+Use of a record
+The main use of A record is for IP address lookup. Using an A record, a web browser is able to load a website using the domain name. As a result, we can access websites on the internet without knowing their IP addresses.
+
+Another use of A record is in the domain name system-based blackhole list (DNSBL). Here, the A record is used to block mail from known spam sources.
+
+2. AAAA record
+AAAA record, just like A record, point to the IP address for a domain. However, this DNS record type is different in the sense that it points to IPV6 addresses.
+
+IPV6 is an upgrade over IPV4 as it offers more IP addresses. As a result, IPV6 solves the issue of running out of unique IP addresses. An IPV6 address looks something like the following:
+
+Copy3001:0db7:3c5d:0024:0000:0000:1a2f:3c1b
+A colon separates each field in an IPV6 address.
+
+Use of AAAA record
+Usage of the AAAA record for DNS resolution has great potential because it uses IPV6, which is an improvement over IPV4. Also, as the internet keeps growing and we're running out of IPV4 addresses, the potential for AAAA records is high.
+
+AAAA records are used to resolve a domain name to the newer IPV6 protocol address.
+
+3. CNAME record
+CNAME—or, in full, "canonical name"—is a DNS record that points a domain name (an alias) to another domain. In a CNAME record, the alias doesn't point to an IP address. And the domain name that the alias points to is the canonical name. For example, the subdomain ng.example.com can point to example.com using CNAME. Here example.com points to the actual IP address using an A record.
+
+Use of CNAME record
+A practical example for the use of CNAME records is running multiple subdomains for different purposes on the same server. For example, we can use ftp.example.com for file transfer protocol (FTP) and serve webpages via www.example.com. We can then use a CNAME record to point both subdomains to example.com. The main domain example.com then points to the server's IP address using an A record.
+
+It's also possible to point a CNAME to another CNAME. However, doing so is inefficient and can lead to slow load speed and poor user experience.
+
+4. NS record
+A nameserver (NS) record specifies the authoritative DNS server for a domain. In other words, the NS record helps point to where internet applications like a web browser can find the IP address for a domain name. Usually, multiple nameservers are specified for a domain. For example, these could look like ns1.examplehostingprovider.com and ns2.examplehostingprovider.com.
+
+Use of NS record
+If you've purchased a web hosting service or set up a simple website, you probably received an email with nameserver details. Those nameservers, in simple terms, connect your domain name to the actual server your site is hosted on. The nameserver contains other DNS records for the domain like an A record and MX record.
+
+5. MX record
+A mail exchange (MX) record, is a DNS record type that shows where emails for a domain should be routed to. In other words, an MX record makes it possible to direct emails to a mail server.
+
+You can have multiple MX records for a single domain name. And what this means is that you can have backup email servers. The following shows an example of a domain with multiple MX records:
+
+Name	Type	​Priority	RDATA
+@	MX	10	mx.zoho.com
+@	MX	20	mx2.zoho.com
+From the above table, the MX record with priority 10 will be the primary mail server, while the secondary server will only be used when the primary server is unavailable (or fails to send emails). The lower the priority value, the higher the actual priority.
+
+Use of MX record
+With an MX record, it's possible to hand off emails to a dedicated email server. For example, you can decide to leave all the trouble of setting up webmail on a server you own to a specialized email provider. This comes with many benefits, including custom email clients for reading and sending emails, and improved security and spam filters. Also, you can use a service like Site24x7 to monitor and verify issues with the mail server your MX records point to.
+
+Other DNS record types
+In addition to the five DNS record types covered so far, here are some other record types:
+
+SOA record: SOA stands for "start of authority." It's an important DNS record type that stores admin information about a domain. This information includes the email address of the admin and when the domain was last updated.
+TXT record: TXT stands for "text," and this record type lets the owner of a domain store text values in the DNS. Several services use this record to verify ownership of a domain.
+PTR record: A pointer (PTR) record provides a domain name for reverse lookup. It's the opposite of an A record as it provides the domain name linked to an IP address instead of the IP address for a domain.
+SRV record: Using this DNS record type, it's possible to store the IP address and port for specific services.
+CERT record: This record type stores public keys certificates.
+DCHID: This DNS record type stores information related to dynamic host configuration protocol (DHCP).
+DNAME: The full meaning of DNAME is "delegation name." This record type works very similarly to CNAME; however, it points all the subdomains for the alias to the canonical domain name. That is, pointing the DNAME for secondsite.com to example.com will also apply to staff.secondsite.com and any other subdomain.
+Conclusion
+In this post, we learned what DNS record types are. We also defined several DNS record types and saw examples of what each type is used for.
+
+DNS makes it possible for us to use human-readable domain names to access resources on the internet. DNS records and the various record types are an important part of the domain name system.
+
+
+VPC(Virtual Private Cloud):
+---------------------------
+VPC is like a mini data center for a project. resources created inside VPC are isolated and private to ourself.
+
+VPC Name = village name
+VPC CIDR = village pincode
+
+subnets = streets
+arch = internet gateway
+
+routes = roads
+
+public and private subnets
+----------------------------
+subnets which are connected to internet gateway are called public subnets
+subnets which are not connected to internet gateway are called private subnets...
+
+route tables and routes
+
+192.168.1.3
+Ip address --> 32 bits
+4 octates --> each octate 8 bits
+
+2^32 IP addresses possible
+
+10.0.0.0/16 --> first 16 bits are fixed, you are not allowed to change
+
+10.0 --> fixed
+each octate range --> 0 - 255
+
+10.0.0.1
+10.0.0.2
+.
+.
+.
+.
+10.0.0.255
+
+10.0.1.0
+10.0.1.1
+.
+.
+10.0.1.255
+
+256*256 = 2^16 = 64,000
+
+10.0.1.0/24 --> 10.0.1 is fixed. You can change last octate
+
+10.0.1.0, 10.0.1.1, 10.0.1.2 .... 10.0.2.255 --> 2^8 IP address possible
+
+10.0.2.0/24, 10.0.3.0/24, 10.0.11.0/24
+
+256 subnets can be created with this logic
+
+
+VPC for a project:
+------------------
+1) create vpc
+2) create internet gateway
+3) attach igw to vpc
+4) create subnets
+5) create route tables
+6) create routes
+7) attach route tables to subnets.
+
+
+
+vpc and subnet planning:
+------------------------
+10.0.0.0/16 --> first two octates(10.0) are fixed. so, we can change last two octates. 
+for a singlevpc we can create 64,000 servers(approx:65,536)
+
+10.0.1.0/24 --> first three octates(10.0.1) are fixed. we can change last ocates that is
+2^8=256 so, 256 subnet are possible.(10.0.1.0(0-255) ,10.0.2.0 , 10.0.11.0.....10.0.256.0)
+
+
+IPV4 CIDR pattern for subnets: we can use any but preffred:
+-----------------------------------------------------------
+
+For public --> 10.0.1.0/24 and 10.0.2.0/24
+
+For private --> 10.0.11.0/24 and 10.0.12.0/24
+
+For databases --> 10.0.21.0/24 and 10.0.22.0/24
+
+For rest --> 10.0.31.0/24 and 10.0.32.0/24
+
+* public --> 1-10
+* private --> 11-20
+* databases --> 21-30
+* rest --> 31-40
+
+
+
+
+
+TERRAFORM:
+----------
+Cloud infra creation tool
+
+1) depends_on = --> for explicit dependencies ie: NAT depends on IGW first create igw then nat
+
+to intialize --> for i in 01-vpc/ 02-sg/ 03-bastion/ 04-db/ /05-apps ; do cd $i ; terraform apply -auto-approve ; cd .. ; done
+
+to delete --> for i in $(ls -dr */) ; do echo ${i%} ; cd ${i%} ; terraform destroy -auto-approve ; cd .. ; done
+
+for i in $(ls -dr */); do echo ${i%}; cd ${i%}; terraform destroy -auto-approve; cd ..; done
+
+
+
+                                        TESTING:
+										--------
+1. Unit Testing
+----------------
+Purpose: Verify that individual units or components of the software work as intended.
+Scope: Very narrow, focusing on single functions or methods.
+When: During the development phase, typically by developers.
+Key Points:
+Tests individual pieces of code in isolation.
+Helps catch bugs early and facilitates easier debugging.
+
+2. Functionality Testing (Functional Testing)
+---------------------------------------------
+Purpose: Validate that the software performs and functions according to the requirements.
+Scope: Broad, covering various functions of the application.
+When: Throughout the software development lifecycle.
+Key Points:
+Focuses on what the system does.
+Ensures the software behaves as expected under specific conditions.
+
+3. SAST (Static Application Security Testing)
+---------------------------------------------
+Purpose: Identify security vulnerabilities in the source code, bytecode, or binary code.
+Scope: Broad, covering the entire codebase.
+When: During development, before the code is executed.
+Key Points:
+Analyzes code statically without running it.
+Helps find security flaws early in the development process.
+
+4. DAST (Dynamic Application Security Testing)
+----------------------------------------------
+Purpose: Identify security vulnerabilities in a running application.
+Scope: Broad, covering the application in its operational environment.
+When: After the application is deployed in a testing environment.
+Key Points:
+Simulates external attacks to find vulnerabilities.
+Tests the application dynamically while it is running.
+
+5. Regression Testing
+----------------------
+Purpose: Ensure that recent code changes do not negatively affect existing functionality.
+Scope: Broad, covering previously tested functionalities.
+When: After any code changes, bug fixes, or new features are added.
+Key Points:
+Validates the overall stability of the application.
+Often automated to handle extensive test suites efficiently.
+
+6. Sanity Testing
+------------------
+Purpose: Verify specific functionality or bug fixes to ensure they work correctly.
+Scope: Narrow and focused on specific areas of the application.
+When: After receiving a build with minor changes or bug fixes.
+Key Points:
+Quick and targeted to validate the correctness of recent changes.
+Helps decide if the build is stable enough for further testing.
+
+7. Smoke Testing
+----------------
+Purpose: Ensure that the critical functionalities of the application work correctly.
+Scope: Broad but shallow, covering the essential features of the application.
+When: After receiving a new software build.
+Key Points:
+Initial check to determine build stability.
+Often the first testing performed on a new build.
+Quick execution to provide immediate feedback.
+
+Summary:
+--------
+Unit Testing: Tests individual components in isolation.
+Functionality Testing: Ensures the application functions as expected according to requirements.
+SAST: Static analysis to find security vulnerabilities in the code.
+DAST: Dynamic analysis to find security vulnerabilities in a running application.
+Regression Testing: Ensures new changes do not break existing functionality.
+Sanity Testing: Verifies specific changes or fixes quickly.
+Smoke Testing: Initial broad check to ensure basic functionality and build stability.

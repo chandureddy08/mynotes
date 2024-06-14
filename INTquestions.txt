@@ -1,0 +1,37 @@
+1) Day to day scenario
+
+
+2) Can you explain architecture of your project?
+
+
+3) How many clusters(EKS) you are using for prod environment and what are cpu and ran sizes?
+
+
+4) How you integrate elab and auto scaling?
+
+
+5) How you configure VPC?
+
+
+6) How do you handle disaster recovery?
+
+
+7) Git commands stash, squash, cherry-pick, rebase and merge?
+
+
+8) Expalin Dockerfile and how you build a simple image?
+
+
+9) How you deploy your application?
+
+
+10) zombie process?
+
+
+11) Inode? 
+
+
+12) Hard link and soft link?
+
+
+13) How to get process Id and kill command?
