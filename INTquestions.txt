@@ -1,3 +1,29 @@
+IMP LINKS:
+----------
+
+1) Linux basics https://medium.com/@rahuldesharaj92/basic-linux-commands-used-by-devops-engineers-in-day-to-day-activities-29593253f66b
+2) Hard link vs Soft link
+https://kk4977.hashnode.dev/difference-between-hard-links-and-soft-links
+3) Intview questions
+https://github.com/RahulDesharaj/Interview-questions/tree/interview
+4) Terraform best practices
+https://medium.com/@rahuldesharaj92/terraform-best-practices-da667be0d2a2
+5) Git
+https://medium.com/@rahuldesharaj92/what-is-the-difference-between-git-merge-and-git-rebase-933927d1e824
+https://medium.com/@rahuldesharaj92/best-git-branching-strategies-ab5fe2cf142f
+6) VPC
+https://medium.com/@rahuldesharaj92/what-is-vpc-in-aws-7d735372f790
+7) Forward proxy vs reverse proxy
+https://medium.com/@kadalisivakumar789/forward-proxy-server-vs-reverse-proxy-server-be53b2efc450
+8) Ansible play-book
+https://medium.com/@rahuldesharaj92/what-is-ansible-how-to-write-your-first-playbook-666be5a76a54
+9) IAC vs Conf management vs Infra provisioning
+https://devopscube.com/infrastructure-as-code-configuration-management/
+10) Containerisation and DNS
+https://joindevops.medium.com/
+
+
+
 1) Day to day scenario
 
 
