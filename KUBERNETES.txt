@@ -1,0 +1,135 @@
+
+Use headless service to provide clustering feature.
+Need both normal serviceand headlessservice to connet the pod.
+
+Deployment vs Statefulset
+---------------------------
+1. stateful applications like DB
+2. PV and PVC are mandatory for statefulset
+3. Orderly provisioning of pods happens.
+4. pods keep their identity like name.
+5. We must create headless service.
+6. every pod should have its own storage. so PV and PVC should be created for every pod.
+
+1. Install EBS drivers
+2. Check EC2 Role permissions
+3. create storage class
+4. create statefulset
+
+mysql-mysql-0
+
+pvc-name-statefulset-name-0
+
+if deployment, nslookup of service gives, service IP address
+if statefulset, nslookup of headless service gives us IP address of all pods.
+
+* statefulset keeps the pod and PV identity same.
+* By using statefulset we get pod names orderly manner like mysql-0, mysql-1, mysql-2
+
+
+RBAC:
+-----
+
+
+
+
+HORIZANTAL POD AUTO SCALING(HPA):
+---------------------------------
+
+Vertical scaling --> Increase the ram, hd and num of cpu cores for the server by directly proprtional to the incoming traffic.
+
+HORIZANTAL scaling --> Create one more server when traffic is increased.
+
+We need two things to read utilisation those are,
+1) Metric server --> To calculate the resouce utilization.(command --> kubectl top pod)
+2) Resource definition inside pod
+* A pod is over utilised can say based on the resorce definition.
+resources:
+        requests:
+          memory: "64Mi"
+          cpu: "100m"
+        limits:
+          memory: "64Mi"
+          cpu: "100m"
+
+
+Taints and Tolerations:
+-----------------------
+By combining taints and tolerations we can effectively manage and control the placement of pods in their clusters, ensuring that resources are used efficiently and appropriately.
+
+* Basically taints and tolerations handled by the SCHEDULER in the master node.
+
+Taint --> TO NODE (apply a taint to a node like paint)
+kubectl taint nodes <node-name> key=value:taint-effect
+
+Tolerations --> Add toleration key & value for a specific pod to keep on that tainted node.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  tolerations:
+  - key: "key"
+    operator: "Equal"
+    value: "value"
+    effect: "NoSchedule"
+	
+taint-effect:
+-------------
+NoExecute --> Immediately evicts running pods and prevents new ones from being scheduled if they don't tolerate the taint.
+
+NoSchedule --> Prevents new pods from being scheduled on the node if they don't tolerate the taint, but doesn't affect running pods.
+
+PreferNoSchedule --> Tries to avoid scheduling new pods on the node if they don't tolerate the taint, but it's not guaranteed.
+
+imagePullPolicy
+-----------------
+image is available in docker hub
+
+nodes will pull the image --> image is present in the node
+
+you changed the image and pushed to hub...
+
+imagePullPolicy
+
+ifNotPresent --> means pull the image, if it is already not pulled inside the pode
+Always --> pull it even it is present or not( best approach).
+
+Label the Node:
+---------------
+kubectl label nodes <your-node-name> disktype=ssd
+kubectl label nodes <your-node-name> disktype- (To remove the label)
+kubectl get nodes --show-labels
+
+* Use both taints, tolerations and Node affinity to run your pods on desired node.
+
+AFFINITY(Like):
+--------------
+Affinity refers to the rules or preferences set to control how pods are scheduled onto nodes or co-located with other pods. Affinity is a way to express constraints that limit the nodes on which a pod can be scheduled, based on labels or the presence of other pods.
+
+Two types of affinity,
+
+1)Node affinity: It is like the nodeSelector but more expressive. It allows you to specify rules about which nodes a pod can be scheduled on.
+
+There are two types of node affinity:
+
+1a)RequiredDuringSchedulingIgnoredDuringExecution: These are hard requirements; the pod will only be scheduled on nodes that satisfy these conditions.
+
+1b)PreferredDuringSchedulingIgnoredDuringExecution: These are soft requirements; the scheduler will try to place the pod on a node that satisfies these conditions, but it can be scheduled on other nodes if no nodes meet the criteria.
+
+Schedule --> scheduler schedules the pod
+Execution --> pod should run
+
+2)Pod Affinity and Pod Anti-Affinity:
+
+Pod Affinity: Allows you to specify rules about which nodes a pod should be scheduled on based on the presence of other pods.
+
+Pod Anti-Affinity allows you to specify rules to avoid placing a pod on the same node as certain other pods.
+
+topologyKey --> topology.kubernetes.io/zone -> for pod affinity.
+
+topologyKey --> topology.kubernetes.io/hostname -> for pod anti affinity.
+
+Pod Affinity: Use it to co-locate related pods to reduce network latency, improve performance, and ensure that pods requiring high bandwidth or low latency are placed close to each other.
+
+Pod Anti-Affinity: Use it to distribute pods for high availability, reduce resource contention, and avoid conflicts between pods by ensuring they are not scheduled on the same nodes.
