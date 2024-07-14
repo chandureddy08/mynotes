@@ -133,3 +133,208 @@ topologyKey --> topology.kubernetes.io/hostname -> for pod anti affinity.
 Pod Affinity: Use it to co-locate related pods to reduce network latency, improve performance, and ensure that pods requiring high bandwidth or low latency are placed close to each other.
 
 Pod Anti-Affinity: Use it to distribute pods for high availability, reduce resource contention, and avoid conflicts between pods by ensuring they are not scheduled on the same nodes.
+
+
+                               INGRESS CONTROLLER:
+							   -------------------
+Ingress contoller is external resorce to the k8 cluster through which k8 receives the traffic from external world it acts as a load balancer first request comes to the ingress controller through it comes to the ingress then it routes to pod through service. In aws we use application load balancer(alb) as ingress controller.
+
+* acts as reverse proxy and load balancer.
+
+* request flow--> Ing cont > ingress > service > pod 
+
+* For ingress controler ingress is must. We can use host based and context/path based routing.
+
+* In our project we are using host based routing.
+
+Ingress Resource:
+Kubernetes ingress resource is responsible for storing DNS routing rules in the cluster.
+
+Ingress Controller:
+Kubernetes ingress controllers (Nginx/HAProxy etc.) are responsible for routing by accessing the DNS rules applied through ingress resources.
+
+Init containers:
+----------------
+Init containers in Kubernetes are specialized containers that run and complete before app containers in a Pod start. It can be one or many should be completed one by one. If init containers fail main containers will not run.
+
+* It's a powerful feature in Kubernetes, enabling more complex initialization and setup logic, ensuring that the main application starts in a correctly configured and ready environment.
+
+spec:
+  initContainers:
+  - name: init-myservice
+    image: busybox:1.28
+    command: ['sh', '-c', 'until nslookup mysql; do echo waiting for myservice; sleep 2; done;']
+  containers:
+  - name: myapp-container
+    image: myapp
+    ports:
+    - containerPort: 80
+
+In Kubernetes, the three different types of probes—startupProbe, readinessProbe, and livenessProbe—serve distinct purposes to ensure that applications run smoothly and reliably. Here's a simple overview of each:
+
+1. Startup Probe:
+-----------------
+Purpose: Determines whether the application within a container has started successfully.
+Use Case: Useful for applications that have a long startup time and might fail or time out if a livenessProbe is applied too early.
+Behavior: Once the startupProbe succeeds, Kubernetes switches to using the livenessProbe and readinessProbe (if defined) to monitor the container's health.
+
+startupProbe:
+  httpGet:
+    path: /healthz
+    port: 8080
+  failureThreshold: 30
+  periodSeconds: 10
+  
+2. Readiness Probe:
+-------------------
+Purpose: Indicates whether the application is ready to handle requests.
+Use Case: Used to signal if a container is ready to serve traffic. If a container fails the readiness probe, it is temporarily removed from the service's load balancers.
+Behavior: A container passing the readiness probe means it's ready to receive traffic. If it fails, Kubernetes stops sending traffic to the container until it passes the probe again.
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  
+3. Liveness Probe:
+------------------
+Purpose: Checks whether the application is running. If the liveness probe fails, Kubernetes restarts the container.
+Use Case: Useful for detecting and recovering from deadlocks, crashes, or other issues where the application is running but not functioning correctly.
+Behavior: If a container fails the liveness probe, Kubernetes kills the container and restarts it according to the Pod's restart policy.
+
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8080
+  initialDelaySeconds: 15
+  periodSeconds: 20
+  
+Summary:
+
+Startup Probe: Ensures the container has successfully started before performing other health checks.
+
+Readiness Probe: Ensures the container is ready to serve traffic, preventing it from receiving requests prematurely.
+
+Liveness Probe: Ensures the container is functioning correctly and can be restarted if it is not.
+
+By using these probes, Kubernetes can more effectively manage the lifecycle of application containers, ensuring high availability and reliability of the applications running within the cluster.
+
+Ephemeral volumes in Kubernetes are temporary storage solutions that are designed to exist only for the lifetime of a Pod. They are typically used for tasks that require short-term storage and are not meant to persist beyond the life of the Pod. Here are detailed overviews of two common types of ephemeral volumes: emptyDir and hostPath.
+
+1. emptyDir:
+------------
+
+Purpose:
+--------
+Provides a temporary directory that a Pod can use.
+The contents of the emptyDir volume are stored on the node's disk or in memory (if specified) and are deleted when the Pod is removed.
+
+Lifecycle:
+----------
+The volume is created when the Pod is assigned to a node.
+The contents are deleted when the Pod is terminated.
+
+Use Cases:
+----------
+Scratch space for applications.
+Caching files for processing.
+Storing temporary data that doesn't need to persist across Pod restarts.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+spec:
+  containers:
+  - name: example-container
+    image: busybox
+    command: ['sh', '-c', 'while true; do echo hello > /mnt/data/hello.txt; sleep 10;done']
+    volumeMounts:
+    - mountPath: /mnt/data
+      name: temp-storage
+  volumes:
+  - name: temp-storage
+    emptyDir: {}
+Key Points:
+
+emptyDir volume can be backed by node's disk or memory (medium: "Memory").
+If backed by memory, it uses RAM, which makes it faster but consumes available RAM.
+
+
+2. hostPath:
+------------
+
+Purpose:
+-------
+Mounts a file or directory from the host node's filesystem into a Pod.
+Provides direct access to host files, which can be used for various purposes, including debugging, sharing files, and accessing host-specific data.
+
+Lifecycle:
+----------
+The volume persists as long as the file or directory exists on the host.
+The contents are not deleted when the Pod is terminated.
+
+Use Cases:
+----------
+Accessing specific files or directories on the host.
+Sharing data between containers within a Pod.
+Debugging purposes where access to host files is necessary.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hostpath-pod
+spec:
+  containers:
+  - name: example-container
+    image: busybox
+    command: ['sh', '-c', 'while true; do echo hello; sleep 10;done']
+    volumeMounts:
+    - mountPath: /mnt/host
+      name: host-volume
+  volumes:
+  - name: host-volume
+    hostPath:
+      path: /data
+      type: DirectoryOrCreate
+	  
+Key Points:
+
+Path: Specifies the path on the host node.
+Type: Specifies the type of the host path:
+DirectoryOrCreate: Creates the directory if it doesn't exist.
+Directory: Must be an existing directory.
+FileOrCreate: Creates the file if it doesn't exist.
+File: Must be an existing file.
+Socket: Must be an existing Unix socket.
+CharDevice: Must be an existing character device.
+BlockDevice: Must be an existing block device.
+Security Considerations:
+
+HostPath Escapes: Containers can potentially access any part of the host's filesystem, leading to security risks.
+
+Portability: Pods using hostPath volumes may not be portable across different environments.
+Isolation: Containers have direct access to the host's filesystem, which can breach isolation.
+
+Summary:
+
+Ephemeral Volumes: Designed for temporary storage tied to the Pod's lifecycle.
+
+emptyDir: Provides scratch space that is deleted when the Pod is removed.
+
+hostPath: Mounts host files/directories into the Pod, providing persistent access to host data but posing potential security risks.
+
+These volumes are useful for different scenarios, and choosing the right one depends on your specific requirements for data persistence, security, and portability.
+
+DaemonSet:
+----------
+A DaemonSet ensures that all (or some) Nodes run a copy of a Pod. As nodes are added to the cluster, Pods are added to them. As nodes are removed from the cluster, those Pods are garbage collected. Deleting a DaemonSet will clean up the Pods it created.
+
+Some typical uses of a DaemonSet are:
+
+running a cluster storage daemon on every node
+running a logs collection daemon on every node
+running a node monitoring daemon on every node
+In a simple case, one DaemonSet, covering all nodes, would be used for each type of daemon. A more complex setup might use multiple DaemonSets for a single type of daemon, but with different flags and/or different memory and cpu requests for different hardware types.
