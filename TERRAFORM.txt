@@ -1,0 +1,11 @@
+TERRAFORM:
+----------
+Cloud infra creation tool
+
+1) depends_on = --> for explicit dependencies ie: NAT depends on IGW first create igw then nat
+
+to intialize --> for i in 01-vpc/ 02-sg/ 03-bastion/ 04-db/ /05-apps ; do cd $i ; terraform apply -auto-approve ; cd .. ; done
+
+to delete --> for i in $(ls -dr */) ; do echo ${i%} ; cd ${i%} ; terraform destroy -auto-approve ; cd .. ; done
+
+for i in $(ls -dr */); do echo ${i%}; cd ${i%}; terraform destroy -auto-approve; cd ..; done

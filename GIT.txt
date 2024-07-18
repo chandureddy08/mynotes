@@ -1,0 +1,5 @@
+GIT and GIT HUB:
+----------------
+
+1) authenticate git hub with linux using token 
+--> git remote set-url origin https://token@github.com/chandureddy08/examgit.git

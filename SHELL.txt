@@ -1,0 +1,55 @@
+SHELL SCRIPT:
+-------------
+
+1) start with #!/bin/bash and use ###to give metadata like info about script and author.
+
+2) varibles: to reduce the repitition and avoid to touch the main script. eg: PERSON1=chandu
+
+3) arguments/parameters: use PERSON1=$1 to enter the parameters manually. eg: sh varibles.sh chandu john till nth varible(enter values while executing the script)
+
+4) Invisible user name and passwod
+echo "Please enter your username::"
+
+read -s USERNAME   #user name is variable
+
+echo "Please enter your Password::"
+
+read -s PASSWORD
+
+echo "Username is: $USERNAME, Password is $PASSWORD"
+* without -s credentials are visible and with -s credentials are not visible.
+
+5) Array: 
+THINGS=("ant" "bat" "cat")
+# size of array is 3
+# list always starts with 0
+# index are 0,1 and 2
+
+echo "First movie is: ${THINGS[0]}"
+echo "all the things are: ${THINGS[@]}
+
+* array --> list of values like THINGS. To print a particular num of array we can do that by using array.
+* use ${THINGS[@]} to print all the list of array.
+
+6) sum operation
+NO1=$1
+NO2=$2
+
+SUM=$(($NO1+$NO2))
+echo "Total of $NO1 and $NO2 is: $SUM"
+
+* Enter values while executing sh sum.sh 100 200
+
+7) Special varibles
+
+echo "All variables: $@"
+echo "Number of variables passed: $#"
+echo "Script name: $0"
+echo "Current working directory: $PWD"
+echo "Home directory of current user: $HOME"
+echo "Which user is running this script: $USER"
+echo "Host name: $HOSTNAME"
+echo "Process id of the current shell script: $$"
+sleep 65
+echo "Process ID of last background command: $!"
+echo "exit status of the last command executed: $?"
