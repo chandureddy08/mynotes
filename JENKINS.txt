@@ -1,0 +1,27 @@
+
+
+
+
+
+
+								Jenkins-Shared-library:
+								-----------------------
+@Library('jenkins-shared-library') _
+
+vars folder contains VM, EKS, pipelineDecission, pipelineGlobals(variables) in groovy. developer just keep a 10 line jenkins file in their repo whenever they call's the pipeline it fetches all the library and matches using the pipelineDecission.groovy. we use configMap to match the pipelines. 
+
+ A Jenkins Shared Library is a way to share and reuse common pipeline code across multiple Jenkins pipelines. It allows you to maintain a centralized repository of reusable pipeline code, which can be used to standardize processes, reduce duplication, and improve maintainability
+
+* Reusable Code: Define common pipeline steps, functions, and variables in a single place.
+
+* Version Control: Manage the shared library code in a version-controlled repository (e.g., Git).
+
+* Single Source of Truth: Centralize shared logic to avoid duplication and simplify maintenance.
+
+* Updates and Improvements: Easily update and improve shared code without modifying individual pipelines.
+
+* Consistency: Ensures consistent implementation of pipeline steps across multiple projects.
+
+* Efficiency: Reduces redundancy by reusing common code, saving development and maintenance time.
+
+* Scalability: Simplifies scaling Jenkins pipelines by providing a centralized way to manage shared logic.
