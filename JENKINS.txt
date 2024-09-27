@@ -25,3 +25,7 @@ vars folder contains VM, EKS, pipelineDecission, pipelineGlobals(variables) in g
 * Efficiency: Reduces redundancy by reusing common code, saving development and maintenance time.
 
 * Scalability: Simplifies scaling Jenkins pipelines by providing a centralized way to manage shared logic.
+
+* If they want to skip some stages mention in those in utils.groovy and define the mandatory stages in pipelineGlobals.
+def getSkipStages(Map stageMap)
+def mandatoryStages = pipelineGlobals.getGetMandatoryDevStage(application)

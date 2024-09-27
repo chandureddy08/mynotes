@@ -1,0 +1,2 @@
+
+* WE are using shift-left process in my project --> enable the scans before deploying into the dev to make sure the code is clean also detect and fix issues early, improving quality and reducing the time and cost.
