@@ -1,0 +1,102 @@
+									SQL Commands:
+									-------------
+1. Data Retrieval – Think "SELECT"
+SELECT: This is like asking the database for data.
+“SELECT” tells the database what data you want.
+Example:
+
+
+SELECT * FROM Employees;
+SELECT retrieves data (from one or more tables) based on your query. The asterisk * means "all columns."
+
+2. Data Insertion – Think "INSERT INTO"
+INSERT INTO: This is like adding new data to the table.
+“INSERT INTO” tells the database where and what new data to add.
+Example:
+
+INSERT INTO Employees (EmployeeID, FirstName, LastName) 
+VALUES (1, 'John', 'Doe');
+INSERT INTO adds new records to a table.
+
+3. Data Update – Think "UPDATE" (change data)
+UPDATE: This is like editing data that's already in the table.
+“UPDATE” tells the database what to change and where to make the changes.
+Example:
+
+UPDATE Employees 
+SET Position = 'Manager' 
+WHERE EmployeeID = 1;
+UPDATE changes existing records in the table based on a condition.
+
+4. Data Deletion – Think "DELETE FROM"
+DELETE FROM: This is like removing data from the table.
+“DELETE FROM” tells the database where to remove data.
+Example:
+
+DELETE FROM Employees WHERE EmployeeID = 1;
+DELETE FROM removes rows from a table, based on a condition (or deletes all rows if no condition is provided).
+
+5. Table Creation – Think "CREATE TABLE"
+CREATE TABLE: This is like building a new table in the database.
+“CREATE TABLE” tells the database what structure to create.
+Example:
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50)
+);
+CREATE TABLE defines a new table and its columns.
+
+6. Table Modification – Think "ALTER TABLE"
+ALTER TABLE: This is like changing the structure of an existing table (e.g., adding/removing columns).
+“ALTER TABLE” tells the database what changes to make to the table structure.
+Example:
+
+ALTER TABLE Employees ADD Email VARCHAR(100);
+ALTER TABLE modifies an existing table by adding, deleting, or changing columns.
+
+7. Table Deletion – Think "DROP TABLE"
+DROP TABLE: This is like destroying the table completely.
+“DROP TABLE” tells the database to remove the entire table.
+Example:
+
+DROP TABLE Employees;
+DROP TABLE permanently removes a table and all of its data.
+
+8. Filtering Results – Think "WHERE"
+WHERE: This is like asking the database for data that meets a condition.
+“WHERE” tells the database what conditions the data must meet.
+Example:
+
+SELECT * FROM Employees WHERE Position = 'Manager';
+WHERE filters records based on a condition, like finding specific rows.
+
+9. Sorting Results – Think "ORDER BY"
+ORDER BY: This is like arranging the data in a particular order.
+“ORDER BY” tells the database how to sort the results (ascending or descending).
+Example:
+
+SELECT * FROM Employees ORDER BY LastName ASC;
+ORDER BY sorts the result set by one or more columns.
+
+10. Grouping Data – Think "GROUP BY"
+GROUP BY: This is like grouping similar data together to summarize it.
+“GROUP BY” tells the database how to organize the data into groups.
+Example:
+
+SELECT Position, COUNT(*) FROM Employees GROUP BY Position;
+GROUP BY groups records based on one or more columns, often used with aggregate functions like COUNT, SUM, AVG.
+
+A Simple Mnemonic to Remember:
+Selected Data – SELECT
+Insert Data – INSERT INTO
+Update Data – UPDATE
+Delete Data – DELETE FROM
+Create Table – CREATE TABLE
+Alter Table – ALTER TABLE
+Drop Table – DROP TABLE
+Where Condition – WHERE
+Order Results – ORDER BY
+Group Data – GROUP BY
+*************************************************************************

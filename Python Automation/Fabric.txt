@@ -1,0 +1,81 @@
+									Fabric libray:
+									--------------
+									
+Fabric is a Python library that is used to automate tasks like deployment, system administration, and remote server management. It provides a high-level API to execute shell commands over SSH, which makes it easier to automate repetitive tasks on remote servers.
+
+Key Features:
+Execute shell commands remotely over SSH.
+Upload and download files to/from remote servers.
+Handle error checking and retries.
+Provide tools for building deployment workflows.
+How to Install Fabric:
+To install Fabric, you can use pip (Python's package manager):
+
+bash
+Copy
+pip install fabric
+Note: Fabric 2.x (which is a major rewrite) requires Python 3. It is recommended to use Fabric 2.x as Fabric 1.x is no longer actively maintained.
+
+Basic Example:
+Here’s a simple example of how you can use Fabric to run commands on a remote server.
+
+python
+Copy
+from fabric import Connection
+
+# Connect to a remote server via SSH
+conn = Connection('username@hostname_or_ip')
+
+# Run a command remotely
+result = conn.run('uname -s', hide=True)
+
+# Print the output
+print(result.stdout.strip())
+In this example:
+
+Connection is used to establish an SSH connection to the remote server.
+conn.run() executes a shell command remotely, and you can capture the result.
+hide=True ensures that the output of the command is hidden except for what you need.
+Using Fabric for File Transfers:
+You can also use Fabric to transfer files to and from remote servers.
+
+Upload a file:
+python
+Copy
+conn.put('local_file.txt', '/remote/path/to/file.txt')
+Download a file:
+python
+Copy
+conn.get('/remote/path/to/file.txt', 'local_file.txt')
+Running Multiple Commands:
+You can chain multiple commands using Fabric’s ability to execute them in sequence:
+
+python
+Copy
+conn.run('cd /var/www && git pull && systemctl restart apache2')
+Other Advanced Features:
+Environment Variables: Set environment variables for commands.
+Parallel Execution: Run tasks in parallel on multiple servers.
+Fabric simplifies repetitive server tasks, especially for managing multiple servers, making it an essential tool for DevOps and system administrators.
+
+
+To Download pip: https://bootstrap.pypa.io/get-pip.py
+
+
+							Remote Server setup:
+							--------------------
+
+* You should have a remote server ip(private) and user id and password in that remote server.
+
+* Use ssh-keygen then ssh-copy-id username@servername then give password for that user.
+
+* Can use one key for many servers.
+
+* Use local for local server and run for remote server.
+
+* fab -l --> list the fabric commands
+* fab -H servername -u username function name(def) --> execute fab commands on remote servers.
+
+
+
+

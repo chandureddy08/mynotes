@@ -1,0 +1,207 @@
+                        Formal Argumets vs Actual Arguments:
+						------------------------------------
+
+1. Formal Arguments
+Formal arguments are the parameters defined in the function signature.
+
+They act as placeholders that receive the values when the function is called.
+
+For example:
+
+def greet(name, age):
+    print(f"Hello, {name}. You are {age} years old.")
+Here, name and age are the formal arguments for the greet function.
+
+2. Actual Arguments
+Actual arguments are the values passed to a function when it is called.
+
+These values are assigned to the corresponding formal arguments.
+
+For example:
+
+greet("Alice", 30)
+Here, "Alice" and 30 are the actual arguments passed to the greet function, corresponding to the formal arguments name and age.
+
+In summary:
+
+Formal arguments are used in function definitions.
+Actual arguments are the values provided when the function is called.
+
+                     Types of Actual Arguments (or arguments passed to a function):
+					 --------------------------------------------------------------
+					 
+1. Positional Arguments
+These are arguments that are passed to a function in the order in which parameters are defined.
+
+The position of each argument matters, as they are assigned to the parameters based on their order.
+
+def greet(name, age):
+    print(f"Hello, {name}. You are {age} years old.")
+
+greet("Alice", 30)  # "Alice" goes to `name`, and `30` goes to `age`
+2. Keyword Arguments
+Keyword arguments allow you to pass values by explicitly specifying parameter names, regardless of their position in the function definition.
+
+This enhances readability and can prevent errors.
+
+greet(age=30, name="Alice")  # The order does not matter
+3. Default Arguments
+Default arguments have a default value in the function definition. If the corresponding argument is not passed, the default value is used.
+
+They are typically used to make parameters optional.
+
+def greet(name, age=25):  # `age` has a default value of 25
+    print(f"Hello, {name}. You are {age} years old.")
+
+greet("Bob")         # Uses default age of 25
+greet("Alice", 30)   # Uses age of 30
+
+4. Variable-length Arguments
+These arguments allow functions to accept an arbitrary number of values. They come in two types:
+
+Arbitrary Positional Arguments (*args): Accepts a variable number of positional arguments and groups them into a tuple.
+
+def greet_all(*names):
+    for name in names:
+        print(f"Hello, {name}!")
+
+greet_all("Alice", "Bob", "Charlie")  # Accepts multiple names
+Arbitrary Keyword Arguments (**kwargs): Accepts a variable number of keyword arguments and groups them into a dictionary.
+
+def greet_with_info(**info):
+    for key, value in info.items():
+        print(f"{key}: {value}")
+
+greet_with_info(name="Alice", age=30, location="NYC")  # Arbitrary key-value pairs
+In summary:
+
+Positional: greet("Alice", 30)
+Keyword: greet(name="Alice", age=30)
+Default: greet(name="Alice") with age defaulted
+Variable-length: *args for multiple positions, **kwargs for multiple key-values.
+
+
+								Scope of Variables:
+								-------------------
+
+In Python, scope refers to the region of a program where a particular variable is accessible. Python has several types of scopes that define where a variable or function is visible and accessible. Here are the primary types:
+
+1. Local Scope
+A variable declared within a function is in the local scope.
+
+It is accessible only within that function and not outside it.
+
+def my_function():
+    x = 10  # Local variable
+    print(x)
+
+my_function()  # Prints 10
+# print(x)  # This will raise an error since `x` is not accessible outside the function
+2. Enclosing Scope (Nonlocal Scope)
+This applies to variables defined in an outer (enclosing) function, especially when using nested functions.
+
+Variables in the enclosing scope can be accessed within nested inner functions but cannot be modified directly unless marked with the nonlocal keyword.
+
+def outer_function():
+    y = 20  # Enclosing variable
+
+    def inner_function():
+        nonlocal y
+        y = 30  # Modifies the enclosing variable
+        print("Inner:", y)
+
+    inner_function()
+    print("Outer:", y)
+
+outer_function()
+# Output:
+# Inner: 30
+# Outer: 30
+3. Global Scope
+A variable declared at the top level of a script or module is in the global scope.
+
+It can be accessed from anywhere within the module, but to modify it within a function, you need the global keyword.
+
+
+z = 100  # Global variable
+
+def modify_global():
+    global z
+    z = 200
+    print("Inside function:", z)
+
+modify_global()  # Inside function: 200
+print("Outside function:", z)  # Outside function: 200
+4. Built-in Scope
+Python also has a built-in scope containing special names and functions, such as print, len, etc.
+These are globally available, so you can access them anywhere in the program without importing or defining.
+LEGB Rule
+Python follows the LEGB rule to resolve variable names in this order:
+
+Local – Variables declared within the current function.
+Enclosing – Variables from any enclosing function scope.
+Global – Variables defined at the top level of a module.
+Built-in – Python's built-in scope (e.g., len, print).
+Example of LEGB Resolution
+
+x = "global"
+
+def outer():
+    x = "enclosing"
+
+    def inner():
+        x = "local"
+        print(x)  # Looks in Local, Enclosing, Global, Built-in (LEGB)
+
+    inner()  # Outputs "local"
+
+outer()
+print(x)  # Outputs "global" since the global `x` was not changed.
+
+
+								Decorators:
+								-----------
+In Python, decorators are a powerful and expressive tool that allow you to modify or enhance the behavior of functions or methods without changing their actual code. They are often used for logging, authentication, memoization, and other cross-cutting concerns in a clean, readable way.
+
+Basics of Decorators
+A decorator is essentially a function that takes another function and extends its behavior without modifying it directly. Here’s a simple example:
+
+def my_decorator(func):
+    def wrapper():
+        print("Something is happening before the function is called.")
+        func()
+        print("Something is happening after the function is called.")
+    return wrapper
+
+@my_decorator
+def say_hello():
+    print("Hello!")
+
+say_hello()
+Output:
+
+Something is happening before the function is called.
+Hello!
+Something is happening after the function is called.
+In this example, my_decorator is a decorator function. By using the @my_decorator syntax, say_hello is wrapped by my_decorator, so every time you call say_hello, it prints the additional statements before and after.
+
+How Decorators Work
+When you write @my_decorator above a function, Python applies the decorator to the function, effectively rewriting it like this:
+
+say_hello = my_decorator(say_hello)
+Decorators with Arguments
+If the function you want to decorate takes arguments, the decorator should also accept those arguments:
+
+def my_decorator(func):
+    def wrapper(*args, **kwargs):
+        print("Something is happening before the function is called.")
+        result = func(*args, **kwargs)
+        print("Something is happening after the function is called.")
+        return result
+    return wrapper
+
+@my_decorator
+def greet(name):
+    print(f"Hello, {name}!")
+
+greet("Alice").

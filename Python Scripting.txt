@@ -1,0 +1,16 @@
+                                python scripting:
+                                -----------------
+Python Collections (Arrays)
+
+There are four collection data types in the Python programming language
+
+1.List: is a collection which is ordered and changeable. Allows duplicate members.
+2.Tuple: is a collection which is ordered and unchangeable. Allows duplicate members.
+3.Set: is a collection which is unordered, unchangeable*, and unindexed. No duplicate members.
+4.Dictionary: is a collection which is ordered** and changeable. No duplicate members
+
+						package vs library vs module:
+						-----------------------------
+A package is a collection of modules (and sometimes other packages).
+A library may consist of multiple modules and packages.
+A module is a collection of functions, classes, and variables.

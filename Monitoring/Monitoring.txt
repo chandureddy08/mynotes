@@ -1,0 +1,150 @@
+
+
+
+1)ITRS Geneos(Monitoring tool) Overview:
+--------------------------------------
+ITRS Geneos is a monitoring and alerting tool designed for high-performance, real-time monitoring of IT infrastructure and applications. It's particularly popular in sectors that require high availability and low latency, such as financial services, telecommunications, and trading systems.
+
+2)ELK Stack (Elasticsearch, Logstash, Kibana):
+-------------------------------------------
+Description: A set of tools for searching, analyzing, and visualizing log data in real-time. Elasticsearch is used for storing logs, Logstash for processing, and Kibana for visualization.
+Key Features:
+Full-text search capabilities
+Log aggregation and analysis
+Real-time data visualization
+Centralized logging for troubleshooting
+Use Cases: Log management, log aggregation, and real-time analysis.
+
+*ELK with filebeat:
+-------------------
+ELK  is a popular stack for centralized logging and data analysis. It helps you collect, index, search, and visualize data logs. Filebeat is one of the Elastic Beats agents, lightweight data shippers that forward log data to the ELK stack (specifically to Elasticsearch or Logstash).
+
+Common Filebeat Modules:
+
+Filebeat has several pre-built modules to make it easier to collect and parse logs from specific sources:
+
+System: For system logs such as syslog and auth logs.
+NGINX: For collecting and parsing NGINX logs.
+Apache: For collecting and parsing Apache logs.
+MySQL: For collecting MySQL logs.
+Redis: For collecting Redis logs.
+
+How Filebeat Works with ELK:
+----------------------------
+Filebeat collects log files: It tailors log files from local systems, and processes them to send them to Elasticsearch or Logstash.
+
+Logstash (Optional): In some cases, the logs are first sent to Logstash for further processing (e.g., filtering, transforming, or enriching the data) before sending them to Elasticsearch. Logstash is often used when more complex transformations are needed.
+
+Elasticsearch: Filebeat directly sends logs to Elasticsearch. Elasticsearch indexes the logs, making them searchable and available for analysis.
+
+Kibana: Once the logs are indexed in Elasticsearch, Kibana provides the interface to visualize, analyze, and monitor the log data with rich dashboards.
+
+
+3. Datadog:
+-----------
+Description: Cloud-based monitoring and analytics platform. It provides end-to-end visibility into application performance, infrastructure, and logs.
+
+Key Features:
+
+Real-time monitoring
+Log management and APM (Application Performance Monitoring)
+Integration with over 400 technologies
+Collaboration features
+Use Cases: Full-stack monitoring, infrastructure monitoring, log management, and application performance tracking.
+
+Use Cases of Datadog:
+---------------------
+Cloud Infrastructure Monitoring:
+
+For cloud platforms like AWS, Google Cloud, or Azure, Datadog offers in-depth monitoring of resources like EC2 instances, RDS databases, and Kubernetes clusters.
+Application Performance Monitoring (APM):
+
+Track performance bottlenecks, troubleshoot slowdowns, and optimize user experience with detailed APM for your applications, including web services, APIs, and databases.
+Log Analysis and Troubleshooting:
+
+Collect, analyze, and search through logs to diagnose issues with applications or infrastructure quickly.
+
+Real-Time Alerts:
+
+Set up alerts for critical infrastructure components, such as when CPU or memory usage exceeds thresholds, or when a service is unavailable.
+DevOps and Continuous Monitoring:
+
+Integrate Datadog with your CI/CD pipeline to monitor applications and systems throughout the development lifecycle and beyond.
+
+				Black box and white box monitoring:
+				-----------------------------------
+Blackbox Monitoring:
+
+focuses on monitoring the system from the outside, testing the outward behavior without knowing the inner workings. It is great for ensuring that services are available and responsive from a user’s perspective.
+
+Whitebox Monitoring:
+
+gives deep, internal visibility into your systems, helping you monitor the health of applications, services, and infrastructure components. It is more focused on the internal performance and health of your environment, making it ideal for troubleshooting and optimizing resource usage
+
+
+black box monitoring
+----------------------
+end user can test application
+
+White box monitoring
+-----------------------
+application internal monitoring
+
+server cpu, ram and memory
+number of requests
+latency --> time to respond to our requests
+logs monitoring
+
+latency
+traffic
+memory
+errors
+
+The Golden Signals of Monitoring refer to the four key metrics that are considered essential for monitoring the health and performance of a system. These signals provide a high-level view of the most critical aspects of a service or application, helping teams quickly detect issues and ensure system reliability. The Four Golden Signals are:
+
+1. Latency:
+-----------
+What it is: Latency measures the time delay in your system's response to a request. It can refer to how long it takes for a service to respond to a user’s request, or for a service to send data back after processing.
+Why it's important: High latency often indicates performance issues, such as bottlenecks in code, overloaded resources, or network delays. Latency can affect user experience, particularly for real-time applications like websites and APIs.
+
+What to monitor:
+
+Response time for API calls or web pages.
+Database query times.
+Network round-trip time (RTT).
+Example: If a web page that normally loads in 2 seconds starts taking 10 seconds, this is a clear sign of increased latency.
+
+2. Traffic:
+-----------
+What it is: Traffic refers to the amount of requests or data flowing through your system, application, or service. It’s often measured in terms of the number of requests per second (RPS) or data transfer rates (e.g., bytes per second).
+Why it's important: Monitoring traffic helps identify changes in the volume of activity. A sudden surge in traffic might indicate a spike in usage or a potential attack (e.g., a DDoS attack). Conversely, a drop in traffic could suggest that something is wrong with the service or application.
+
+What to monitor:
+
+Request count per second (e.g., HTTP requests, API calls).
+Data volume (e.g., bytes sent or received).
+Example: A sudden increase in API requests might indicate a promotion or campaign that’s driving more traffic, but it could also signal an attack.
+
+3. Errors:
+----------
+What it is: Errors track the number of failed requests or operations. This can include HTTP error responses (like 500 Internal Server Error), failed database queries, or system crashes.
+Why it's important: An increase in error rates can quickly signal that something is wrong with the system, whether it's a bug, a misconfiguration, or a service failure. It’s crucial to catch errors early to prevent them from affecting users.
+
+What to monitor:
+
+HTTP status codes, such as 500 (internal server error), 404 (not found), and 502 (bad gateway).
+Application errors, such as exceptions or crashes.
+Service health (e.g., database connection failures, microservice downtime).
+Example: If an API returns more than 5% 500 status codes for a given period, it could indicate that something is wrong with your service, such as a misconfigured server or an issue with the application.
+
+4. Saturation:
+--------------
+What it is: Saturation refers to how full your resources are or how close they are to their capacity limits. This could be the utilization of key resources like CPU, memory, disk space, or network bandwidth.
+Why it's important: If your system is operating at or near its capacity, it can lead to performance degradation or even service outages. Saturation metrics help identify when you need to scale up or optimize the resources you're using.
+
+What to monitor:
+
+CPU and memory utilization.
+Disk I/O and storage usage.
+Network bandwidth.
+Example: If a server’s CPU utilization consistently exceeds 90%, the system may be approaching capacity, which could lead to slowdowns or outages.

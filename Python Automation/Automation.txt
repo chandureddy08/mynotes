@@ -1,0 +1,132 @@
+
+							Notes for Automation:
+							---------------------
+
+A module is a single file with Python code.
+A library is a collection of related modules grouped together to offer more functionality.
+
+** If you install any package in linux by using root user affects for the total system else normal user affects only for himself.
+
+--> Root user: Installs packages globally, affecting all users.
+--> Normal user: Installs packages locally, affecting only their environment.
+
+pip is a package installer for python.
+
+Virtual environment:
+--------------------
+  A virtual environment in Python is a self-contained directory that contains a Python installation and its own set of libraries and dependencies. It allows you to manage dependencies for different projects separately, without interfering with the global Python installation or other projects.
+
+Here’s why virtual environments are useful:
+
+Isolated environments: Each project can have its own specific versions of libraries, preventing conflicts between projects that require different versions of the same library.
+
+No need for root or admin privileges: You don't need to install packages globally or have administrator rights, since the virtual environment is local to your project.
+
+Clean development: It keeps your global Python environment clean from unnecessary or outdated packages that might only be needed in one project.
+
+Reproducibility: By using virtual environments, you can freeze your dependencies (e.g., via requirements.txt) and make sure others can replicate your environment exactly
+
+How to create virtual environment in python:
+--------------------------------------------
+Create a virtual environment with name "devops": python -m venv devops
+To activate a virtual environment: source ./devops/Scripts/activate
+To install a package (for e.g. ansible): pip install ansible
+To uninstall a package: pip uninstall ansible
+To list all the packages that are present in an environment: pip list --format=freeze
+A package is a collection of libraries, a library is a collection of modules and a module is a collection of functions
+All the necessary packages that are required to setup an application is defined in a file called requirements.txt
+To install packages from the requirements.txt file, we use: pip install -r requirements.txt
+
+
+1. System Administration & Task Automation
+------------------------------------------
+os: Provides a way to interact with the operating system, handle file operations (e.g., reading, writing, deleting files), and manage directories.
+shutil: For high-level file operations like copying and moving files or directories.
+subprocess: Allows you to execute system commands, interact with processes, and retrieve their output, ideal for automating shell commands.
+psutil: Helps you monitor and automate system and process management tasks (e.g., CPU, memory, disk usage, process management).
+schedule: A simple library to schedule Python functions to run at specific times or intervals, perfect for cron-like tasks.
+crontab: Allows for managing cron jobs programmatically via Python.
+
+
+2. Cloud Automation
+-------------------
+boto3: The official AWS SDK for Python. It enables automation of tasks on AWS services, such as EC2, S3, Lambda, etc.
+google-cloud-python: Official Python client library for Google Cloud. It helps automate tasks in Google Cloud services like storage, compute, and machine learning.
+azure-mgmt: Python SDK for managing and automating Azure cloud services.
+docker-py: A Python client for Docker, used to automate Docker container management (e.g., creating containers, managing networks, building images).
+paramiko: A Python library for SSH protocol, used to automate tasks over SSH on remote servers.
+
+
+3. Web & API Automation
+------------------------
+requests: The go-to library for sending HTTP requests to interact with RESTful APIs. Ideal for automating tasks that involve web requests (e.g., GET, POST).
+Selenium: A popular tool for automating web browser interactions, such as clicking buttons, filling forms, and scraping web pages.
+BeautifulSoup: A powerful library for parsing HTML and XML documents, often used for web scraping tasks.
+Scrapy: A more advanced framework for web scraping and automating data collection from websites.
+Pyppeteer: A Python port of Puppeteer, useful for automating web pages with headless Chrome, especially when dealing with dynamic content.
+http.client: Provides the ability to make low-level HTTP requests for interacting with web servers.
+
+
+4. File & Data Automation
+--------------------------
+pandas: Ideal for automating data analysis, cleaning, transformation, and storage tasks (e.g., CSV to Excel, data filtering).
+openpyxl: A library for reading and writing Excel files, useful for automating Excel-related tasks.
+csv: Built-in Python library for reading and writing CSV files, useful for automating data processing and storage.
+PyPDF2: A library for extracting and manipulating data from PDF files, such as merging, splitting, or converting PDFs.
+tabula-py: A Python wrapper for Tabula, a tool for extracting tables from PDFs into pandas DataFrames.
+
+
+5. DevOps Automation
+---------------------
+Ansible (via ansible-runner): Although Ansible is a standalone tool, it has Python bindings for automating and managing server configurations.
+fabric: A Python library to automate deployment tasks and SSH command execution on remote servers.
+pyinfra: A Python-based alternative to Ansible, used to automate infrastructure deployment and configuration management.
+pykube: A Python client for interacting with Kubernetes clusters, automating deployment, and management tasks.
+helm (via pyhelm): Automates the deployment and management of applications on Kubernetes clusters using Helm charts.
+
+
+1. Payload
+As mentioned before, in the context of APIs or web development, a payload refers to the actual data that is being sent in a request or response. In an API response, for example, the payload contains the real data (e.g., user information, a list of products, or search results) that the client (browser, mobile app, etc.) is interested in.
+
+For example, in a RESTful API, the payload of a response might look like this:
+
+json
+Copy
+{
+  "data": [
+    { "id": 1, "name": "Item 1" },
+    { "id": 2, "name": "Item 2" },
+    { "id": 3, "name": "Item 3" }
+  ]
+}
+In this case, the payload is the array of items (data), which is the actual information the API is returning.
+
+2. Pagination
+Pagination refers to the technique of dividing large datasets into smaller, more manageable chunks (or pages) so that they can be loaded incrementally. Instead of returning all records at once, an API or server can send data in smaller segments, allowing the client to load and display only a subset of data at a time.
+
+Pagination is useful when dealing with large datasets, as it improves performance and user experience by reducing the load time and preventing the browser or app from being overwhelmed with too much data.
+
+In an API response with pagination, the payload will contain a subset of the data (often a single page of results), and the response will typically include information on how to request more pages of data.
+
+For example, a paginated response might look like this:
+
+json
+Copy
+{
+  "data": [
+    { "id": 1, "name": "Item 1" },
+    { "id": 2, "name": "Item 2" }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 5,
+    "next_page": "/api/items?page=2"
+  }
+}
+In this example:
+
+The payload is the array of items (data).
+The pagination information (pagination) tells you:
+The current page number.
+The total number of pages available.
+The link to the next page of results (next_page).

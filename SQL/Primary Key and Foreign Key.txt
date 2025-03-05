@@ -1,0 +1,159 @@
+									Primary Key:
+									------------
+In SQL, a primary key is a column or a set of columns in a database table that uniquely identifies each row in that table. Here are the primary uses of primary keys in SQL:
+
+* Doesn't allow the duplicate values
+
+Uniqueness: A primary key ensures that each row in a table has a unique identifier. No two rows can have the same value in the primary key column(s), which guarantees data integrity.
+
+Identification: The primary key is used to uniquely identify each record in a table. It allows for efficient data retrieval and organization.
+
+Indexing: When a primary key is created, SQL automatically creates a unique index on the primary key column(s). This helps speed up query performance by making lookups faster.
+
+Uniqueness: Values in the primary key column(s) must be unique.
+Not Null: The primary key column(s) cannot contain null values.
+Single or Composite: A primary key can consist of a single column or a combination of multiple columns (composite key).
+Automatically Indexed: SQL automatically creates an index on the primary key column(s), improving search performance.
+
+using primary key:
+------------------
+CREATE DATABASE JNTUH;
+USE JNTUH;
+
+CREATE TABLE STUDENTS(
+ID INT PRIMARY KEY,
+NAME VARCHAR(50),
+COURSE VARCHAR(50)
+);
+
+DESCRIBE STUDENTS;
+select * FROM STUDENTS;
+INSERT INTO STUDENTS VALUES
+(01,"CHANDU","ML");
+
+INSERT INTO STUDENTS VALUES
+(01,"UDAY","AIML");  * So it doesn't allow this duplicate values.
+
+
+										Foreign Key:
+										------------
+A foreign key in SQL is a column (or a set of columns) in one table that links to the primary key in another table. It establishes a relationship between the two tables, ensuring data integrity and enabling the database to enforce rules about how the tables are related.
+
+* Used in joins --> To extract data form different tables.
+
+Key Points About Foreign Keys:
+------------------------------
+A foreign key is used to link two tables together.
+It is a column (or columns) in a table that refers to the primary key in another table.
+Foreign keys help maintain referential integrity, meaning they ensure that the relationship between two tables is valid.
+
+Foreign Key Uses:
+-----------------
+Maintain Relationships: It enforces a relationship between different tables, such as customers having orders or employees working in departments.
+Data Integrity: It ensures that only valid data is inserted into the foreign key column. For example, you can’t have an order that references a non-existent customer.
+Cascade Actions: Foreign keys can be set to automatically update or delete related rows in other tables when a record is updated or deleted.
+
+CREATE TABLE STUDENTS1(
+ID INT,
+NAME VARCHAR(50),
+COURSE VARCHAR(50),
+COURSEID INT PRIMARY KEY
+);
+
+CREATE TABLE COURSES(
+COURSEID INT PRIMARY KEY,
+NAME VARCHAR(255),
+FOREIGN KEY(COURSEID) REFERENCES STUDENTS1(COURSEID)
+);
+
+									Unique Key:
+									-----------		
+A unique key in SQL is a constraint that ensures all values in a column (or a set of columns) are distinct, meaning no two rows in the table can have the same value for that column or combination of columns. It is similar to a primary key, but unlike a primary key, a unique key can accept NULL values (although only one NULL value is allowed for the column if it's a unique constraint).
+
+Key Points About Unique Keys:
+-----------------------------
+A unique key ensures the uniqueness of the values in a column or a combination of columns.
+You can have multiple unique keys in a table, but only one primary key.
+A unique key allows NULL values, but only one NULL value per column (in most database systems like MySQL, SQL Server, and PostgreSQL).
+Indexes are automatically created for unique keys to enforce uniqueness and improve query performance.
+
+Uses of a Unique Key in SQL:
+----------------------------
+Ensure Uniqueness: It is used to make sure that the values in a column (or combination of columns) are unique across all records in the table. For example, ensuring that an email address or username is unique.
+
+Data Integrity: A unique key helps to maintain data integrity by preventing duplicates and ensuring that the data entered into the database follows a specific uniqueness rule.
+
+Multiple Unique Constraints: Unlike the primary key (which can only be defined once per table), a table can have multiple unique keys, providing more flexibility in data design.
+
+Performance Optimization: Since unique keys automatically create indexes, they help speed up queries that search for specific values in that column (just like primary keys).
+
+CREATE TABLE STUDENTS3(
+ID INT UNIQUE,
+NAME VARCHAR(255),
+COURSE VARCHAR(100)
+);
+SELECT * FROM STUDENTS3;
+
+INSERT INTO STUDENTS3 VALUES
+(01,"CHANDU","AIML");
+
+INSERT INTO STUDENTS3(NAME,COURSE) VALUES ("CHANDU","AIML");
+
+									COMPOSITE KEY:
+									--------------
+A composite key in SQL is a primary key that consists of two or more columns in a table. Together, these columns uniquely identify each record in the table. Each individual column in the composite key may not be unique on its own, but when combined, they guarantee uniqueness for each row.
+
+Use of Composite Key:
+---------------------
+Multiple Columns for Uniqueness: Sometimes, a single column cannot uniquely identify a record, but a combination of columns can. In these cases, a composite key is used.
+Representing Relationships: A composite key can be used to represent a relationship between two or more entities where the combination of columns is required for unique identification.
+
+Example of a Composite Key:
+---------------------------
+Imagine a table of order details where each order can have multiple products, and each product can appear in multiple orders. To uniquely identify each record in the OrderDetails table, you can use a combination of the OrderID and ProductID as a composite key. This ensures that each combination of OrderID and ProductID is unique.
+
+CREATE TABLE ROLLNUMBER(
+YOJ INT,
+COLLEGECODE VARCHAR(255),
+COURSECODE VARCHAR(255),
+PRIMARY KEY(YOJ,COLLEGECODE,COURSECODE)
+);
+
+INSERT INTO ROLLNUMBER VALUES
+(18,"JN45","A0");
+SELECT * FROM ROLLNUMBER;
+
+SELECT *,CONCAT(YOJ,COLLEGECODE,COURSECODE) AS ROLLNO FROM ROLLNUMBER;
+INSERT INTO ROLLNUMBER VALUES
+(20,"JN45","A0");
+	 yoj clgcode coursecode Roll.no(result)
+O/P: 18	JN45	A0			18JN45A0
+     20	JN45	A0			20JN45A0.
+	 
+							Surrogate Key(AUTO_INCREMENT):
+							------------------------------
+A surrogate key in SQL is an artificial or system-generated key used to uniquely identify a record in a table. It is typically used when a natural key (i.e., a meaningful key based on real-world data, like an email address or product code) is either unavailable, unsuitable, or inefficient for uniquely identifying records. The surrogate key is usually an integer (or sometimes a string) that is automatically generated and has no business meaning.
+
+CREATE TABLE STUDENTS4(
+ID INT AUTO_INCREMENT PRIMARY KEY,
+NAME VARCHAR(255),
+COURSE VARCHAR(255)
+);
+INSERT INTO STUDENTS4(NAME,COURSE) VALUES
+("CHANDU","DSA"),
+("RAJ","AIML");
+SELECT *FROM STUDENTS4;
+
+O/P:
+1	CHANDU	DSA
+2	RAJ	AIML
+
+Super Key:
+---------
+A set of one or more columns that can uniquely identify a record in a table.
+
+Example: {StudentID, Name} can be a super key if it uniquely identifies a student.
+
+Student Key:
+------------
+This term is not a standard SQL concept. It seems to refer to a candidate key or a primary key specifically in the context of a student table (i.e., a key that uniquely identifies a student). But in SQL terminology, candidate key or primary key would be the correct terms.

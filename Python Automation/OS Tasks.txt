@@ -1,0 +1,301 @@
+
+										OS TASKS:
+										---------
+
+In Python, you can interact with the operating system and perform various tasks such as file handling, process management, environment interaction, etc. The os module is commonly used for these purposes.
+
+Here are some common tasks you can perform using the os module in Python:
+
+1. Working with Directories
+Create a directory:
+
+python
+Copy
+import os
+os.mkdir("new_directory")
+Change the current working directory:
+
+python
+Copy
+os.chdir("path/to/directory")
+Get the current working directory:
+
+python
+Copy
+current_dir = os.getcwd()
+print(current_dir)
+List files and directories in a directory:
+
+python
+Copy
+files = os.listdir("path/to/directory")
+print(files)
+Remove a directory:
+
+python
+Copy
+os.rmdir("new_directory")  # Only removes empty directories
+2. File Operations
+Check if a file or directory exists:
+
+python
+Copy
+exists = os.path.exists("file_or_directory_path")
+print(exists)
+Remove a file:
+
+python
+Copy
+os.remove("file.txt")
+Rename a file:
+
+python
+Copy
+os.rename("old_name.txt", "new_name.txt")
+Get file properties (e.g., size):
+
+python
+Copy
+file_size = os.path.getsize("file.txt")
+print(file_size)
+3. Environment Variables
+Get an environment variable:
+
+python
+Copy
+path = os.getenv("PATH")
+print(path)
+Set an environment variable:
+
+python
+Copy
+os.environ["MY_VARIABLE"] = "value"
+4. Working with Processes
+Execute a system command:
+
+python
+Copy
+os.system("ls")  # On Linux or macOS, use "dir" on Windows
+Run a command and capture the output:
+
+python
+Copy
+result = os.popen("ls").read()
+print(result)
+Get the current process ID (PID):
+
+python
+Copy
+pid = os.getpid()
+print(pid)
+Get the parent process ID (PPID):
+
+python
+Copy
+ppid = os.getppid()
+print(ppid)
+5. Path Manipulation (with os.path submodule)
+Join paths:
+
+python
+Copy
+full_path = os.path.join("folder", "file.txt")
+print(full_path)
+Check if a path is a file or directory:
+
+python
+Copy
+is_file = os.path.isfile("file.txt")
+is_dir = os.path.isdir("folder")
+print(is_file, is_dir)
+Get the absolute path:
+
+python
+Copy
+abs_path = os.path.abspath("file.txt")
+print(abs_path)
+Split a path:
+
+python
+Copy
+head, tail = os.path.split("/path/to/file.txt")
+print(head, tail)
+Get the file extension:
+
+python
+Copy
+ext = os.path.splitext("file.txt")[1]
+print(ext)
+6. Working with Temporary Files (using tempfile module)
+Although not part of the os module, Python’s tempfile module is useful for creating temporary files and directories:
+
+python
+Copy
+import tempfile
+
+# Create a temporary file
+with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+    print(tmp_file.name)
+7. File Permissions
+Change file permissions:
+
+python
+Copy
+os.chmod("file.txt", 0o755)  # Changes permissions to rwx-r-xr-x
+Change the owner of a file (Linux only):
+
+python
+Copy
+os.chown("file.txt", user_id, group_id)
+Example: Combining OS Tasks
+Here's an example that combines creating directories, files, and checking the file size:
+
+python
+Copy
+import os
+
+# Step 1: Create a new directory
+os.mkdir("my_new_directory")
+
+# Step 2: Create a new file in the directory
+with open("my_new_directory/sample.txt", "w") as f:
+    f.write("Hello, OS tasks with Python!")
+
+# Step 3: List contents of the directory
+files = os.listdir("my_new_directory")
+print("Files in directory:", files)
+
+# Step 4: Get file size
+file_size = os.path.getsize("my_new_directory/sample.txt")
+print(f"File size: {file_size} bytes")
+
+Both shutil and subprocess are Python modules that allow you to perform specific OS-level tasks, but they serve different purposes. Here's an explanation of each:
+
+1. shutil Module:
+The shutil module provides a higher-level interface for file and directory operations. It's especially useful for copying, moving, and deleting files or directories. It also supports functions for file system operations like creating archives or removing directories.
+
+Some key functions in the shutil module:
+
+Copying files:
+
+python
+Copy
+import shutil
+shutil.copy("source.txt", "destination.txt")  # Copy file
+Copying directories:
+
+python
+Copy
+shutil.copytree("source_directory", "destination_directory")  # Copy directory and its contents
+Moving files or directories:
+
+python
+Copy
+shutil.move("source.txt", "destination.txt")  # Move file
+Deleting files:
+
+python
+Copy
+shutil.rmtree("directory_to_remove")  # Recursively delete a directory and its contents
+Creating archives:
+
+python
+Copy
+shutil.make_archive("archive_name", "zip", "folder_to_compress")  # Create a zip archive of a directory
+Unpacking archives:
+
+python
+Copy
+shutil.unpack_archive("archive.zip", "destination_folder")  # Unpack zip archive
+shutil is generally used for higher-level operations involving file and directory manipulation. It's simpler and more powerful than using the basic os module for tasks like copying or moving large amounts of data.
+
+2. subprocess Module:
+The subprocess module allows you to spawn new processes, interact with system commands, and work with input/output streams. It's used for running external commands or interacting with the underlying operating system in a way that requires more complex interactions than those provided by os.system().
+
+Some common uses of the subprocess module:
+
+Running a simple command:
+
+python
+Copy
+import subprocess
+subprocess.run(["ls", "-l"])  # Runs the `ls -l` command on Unix-like systems (e.g., Linux, macOS)
+Running a command and capturing its output:
+
+python
+Copy
+result = subprocess.run(["ls", "-l"], capture_output=True, text=True)
+print(result.stdout)  # Prints the output of the command
+Running a command with input:
+
+python
+Copy
+result = subprocess.run(["grep", "hello"], input="hello world", capture_output=True, text=True)
+print(result.stdout)  # This will print "hello world" since it matches "hello"
+Running a command with custom error handling:
+
+python
+Copy
+try:
+    result = subprocess.run(["nonexistent_command"], check=True, capture_output=True, text=True)
+except subprocess.CalledProcessError as e:
+    print(f"Error: {e}")
+Running a command with shell features (like pipes):
+
+python
+Copy
+subprocess.run("echo Hello | grep Hello", shell=True)
+Running a command with specific environment variables:
+
+python
+Copy
+subprocess.run("echo $MY_VAR", shell=True, env={"MY_VAR": "Hello"})
+subprocess is a very powerful tool for running external commands, interacting with processes, and managing their input/output. It's a much safer and more flexible alternative to os.system() (which is a simpler, more limited way to run shell commands).
+
+When to Use Which?
+Use shutil when you need to perform file and directory operations, like copying, moving, or deleting files or directories, and creating or extracting archives.
+
+Use subprocess when you need to run shell commands or interact with other programs and processes from your Python script, such as running system commands or using external tools.
+
+Example: Using Both shutil and subprocess Together
+You can use both shutil and subprocess for different tasks in the same program. For example, you might want to copy a file and then run a command to compress it:
+
+python
+Copy
+import shutil
+import subprocess
+
+# Copy a file
+shutil.copy("file.txt", "copied_file.txt")
+
+# Compress the copied file
+subprocess.run(["zip", "copied_file.zip", "copied_file.txt"])
+
+# Optionally, remove the copied file after compression
+shutil.remove("copied_file.txt")
+In this example:
+
+shutil.copy() is used to copy a file.
+subprocess.run() is used to run the zip command to compress the file.
+Both modules are incredibly useful for handling different aspects of OS-level interaction from within your Python scripts.
+
+Some of the useful things in this module:  ex:print(os.getcwd())  os.chdir()
+----------------------------------------------------------------
+
++ os.getcwd()                                            => get current working directory
++ os.chdir(<path>)                                    => change directory 
++ os.listdir()	                                            => list directory
++ os.mkdir(<dirname>)                           => create a directory
++ os.makedirs(<dirname>)                    => make directories recursively
++ os.rmdir(<dirname>)	                   => remove directory
++ os.removedirs(<dirname>)                => remove directory recursively
++ os.rename(<from>, <to>)                   => rename file
++ os.stat(<filename>)                            => print all info of a file
++ os.walk(<path>)	                          => traverse directory recursively
++ os.environ		                                 => get environment variables
++ os.path.join(<path>, <file>)              => join path without worrying about /
++ os.path.basename(<filename>)     => get basename
++ os.path.dirname(<filename>)         => get dirname
++ os.path.exists(<path-to-file>)         => check if the path exists or not
++ os.path.splitext(<path-to-file>)      => split path and file extension
++ dir(os)			                               => check what methods exists
