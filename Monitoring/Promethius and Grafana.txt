@@ -1,0 +1,462 @@
+
+* Install the node exporter in nodes to monitor either eks nodes or ec2 in case of eks install in a name space.
+
+Prometheus is an open-source monitoring and alerting system that collects, stores, and queries time-series data. It’s widely used for observability in cloud-native environments like Kubernetes.
+
+🔹 Primary Use Cases:
+✅ Infrastructure & Application Monitoring
+✅ Cloud & Kubernetes Observability
+✅ Performance & Reliability Tracking
+✅ Alerting for Downtime or Anomalies
+
+🔹 Prometheus Architecture
+Prometheus follows a pull-based architecture, meaning it fetches (scrapes) data from targets rather than waiting for them to send data.
+
+🖼 Components of Prometheus:
+
+1️.Prometheus Server – The main component that collects and stores metrics.
+2.Exporters – Agents that expose metrics (e.g., Node Exporter for system metrics).
+3️.Service Discovery – Automatically finds targets (e.g., Kubernetes, AWS).
+4.Time-Series Database (TSDB) – Stores metrics efficiently with labels.
+5️.PromQL (Query Language) – Retrieves and analyzes stored data.
+6️.Alertmanager – Sends alerts when predefined conditions are met.
+7️.Visualization – Integrates with Grafana for dashboards.
+
+🔹 How Prometheus Works
+
+1️.Data Collection (Scraping):
+
+Prometheus scrapes (pulls) metrics from HTTP endpoints exposed by targets.
+Example HTTP metric endpoint (exposed by an application):
+lua
+Copy
+Edit
+http_requests_total{method="GET", status="200"} 500
+→ This means 500 GET requests were received with a 200 OK status.
+
+2.Service Discovery (Dynamic Target Detection):
+
+Instead of manually defining targets, Prometheus automatically discovers services.
+Works with:
+✅ Kubernetes (Pods, Nodes, Services)
+✅ AWS EC2, Azure, GCE
+✅ Consul, Etcd, Zookeeper
+✅ Docker Swarm, Nomad
+Example: Kubernetes Service Discovery
+yaml
+Copy
+Edit
+scrape_configs:
+  - job_name: 'kubernetes-pods'
+    kubernetes_sd_configs:
+      - role: pod
+This dynamically discovers all Kubernetes Pods exposing metrics.
+
+3️.Storage (Time-Series Database - TSDB):
+
+Metrics are stored as time-series data.
+Each metric has:
+A Name (e.g., cpu_usage)
+A Timestamp (when it was recorded)
+Labels (Key-Value Pairs) (e.g., {instance="server1", region="us-east"})
+Example of Stored Metrics:
+arduino
+Copy
+Edit
+cpu_usage{instance="server1", region="us-east"} 75
+memory_usage{instance="server1"} 60
+→ This means CPU usage is 75%, and memory usage is 60% on server1.
+
+4️.Querying Metrics with PromQL:
+
+PromQL (Prometheus Query Language) is used to retrieve and analyze metrics.
+
+Basic Queries
+📌 Get all CPU usage metrics:
+
+promql
+Copy
+Edit
+cpu_usage
+📌 Get the total number of HTTP requests:
+
+promql
+Copy
+Edit
+http_requests_total
+Advanced Queries
+📌 Show the rate of HTTP requests over the last 5 minutes:
+
+promql
+Copy
+Edit
+rate(http_requests_total[5m])
+📌 Show CPU usage per instance, sorted in descending order:
+
+promql
+Copy
+Edit
+cpu_usage | topk(5, cpu_usage)
+📌 Show the average memory usage over the past 10 minutes:
+
+promql
+Copy
+Edit
+avg_over_time(memory_usage[10m])
+
+🔹 Alerting with Alertmanager
+Prometheus triggers alerts when predefined conditions are met. These alerts are sent to Alertmanager, which routes them to Slack, Email, PagerDuty, or Webhooks.
+
+1️.Define Alert Rules in Prometheus:
+
+Alerts are defined in alert.rules.yml:
+
+yaml
+Copy
+Edit
+groups:
+  - name: high_cpu_usage
+    rules:
+      - alert: HighCPUUsage
+        expr: cpu_usage > 80
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High CPU usage detected on {{ $labels.instance }}"
+✔ expr: cpu_usage > 80 → Triggers if CPU usage exceeds 80%.
+✔ for: 2m → Waits 2 minutes before triggering (avoiding false alarms).
+✔ labels → Defines the severity of the alert.
+✔ annotations → Provides additional info in the alert message.
+
+2️.Configure Alertmanager:
+
+Alertmanager decides where to send alerts (Slack, email, etc.).
+Example alertmanager.yml configuration:
+
+yaml
+Copy
+Edit
+route:
+  receiver: 'slack'
+receivers:
+  - name: 'slack'
+    slack_configs:
+      - channel: '#alerts'
+        send_resolved: true
+        api_url: 'https://hooks.slack.com/services/TOKEN'
+✔ Sends alerts to Slack channel #alerts.
+✔ Uses a webhook API URL to send notifications.
+
+🔹 Visualization with Grafana
+Grafana provides advanced dashboards for Prometheus data.
+Example Grafana Dashboard Queries:
+CPU Usage Trend → avg(cpu_usage) by (instance)
+Memory Usage Over Time → avg_over_time(memory_usage[10m])
+HTTP Requests Per Second → rate(http_requests_total[1m])
+Steps to Integrate Prometheus with Grafana
+Install Grafana (docker run -d -p 3000:3000 grafana/grafana).
+Add Prometheus as a data source.
+Create a new dashboard and use PromQL queries.
+
+🔹 Scaling Prometheus
+For large-scale monitoring, Prometheus can be federated or used with remote storage.
+
+Federation (Hierarchical Prometheus Setup)
+Used to aggregate metrics from multiple Prometheus servers.
+Example:
+Local Prometheus instances collect metrics.
+A central Prometheus server scrapes the local instances.
+yaml
+Copy
+Edit
+scrape_configs:
+  - job_name: 'federate'
+    honor_labels: true
+    metrics_path: '/federate'
+    params:
+      match[]:
+        - '{job="kubernetes"}'
+    static_configs:
+      - targets:
+          - 'prometheus-1:9090'
+          - 'prometheus-2:9090'
+Remote Storage Solutions
+Prometheus can push data to long-term storage like:
+
+✅ Thanos
+✅ Cortex
+✅ VictoriaMetrics
+
+🔹 Summary: Why Use Prometheus?
+
+✅ Pull-based monitoring (better control over data collection).
+✅ Powerful query language (PromQL) for advanced analysis.
+✅ Service Discovery (dynamic monitoring in Kubernetes, AWS, etc.).
+✅ Built-in alerting with Alertmanager.
+✅ Scalable & highly available (Federation & Remote Storage).
+✅ Easy integration with Grafana for beautiful dashboards.
+
+** prometheus.yaml **
+---------------------
+
+The prometheus.yml file is the main configuration file for Prometheus. It defines:
+
+✅ Global settings (scrape interval, evaluation interval)
+✅ Scrape targets (where Prometheus collects metrics from)
+✅ Service Discovery (dynamic detection of services)
+✅ Alerting (connecting to Alertmanager)
+✅ Rule files (defining alerts)
+✅ Relabeling (modifying and filtering labels before storage)
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 30s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  - job_name: 'kubernetes-pods'
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: keep
+        regex: my-app
+
+  - job_name: 'ec2-instances'
+    ec2_sd_configs:
+      - region: us-east-1
+    relabel_configs:
+      - source_labels: [__meta_ec2_tag_Name]
+        regex: my-server.*
+        action: keep
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - "alert.rules.yml"
+  
+🔹 Summary
+✔ Global settings → scrape_interval, evaluation_interval
+✔ Scrape targets → Static targets (static_configs) or dynamic (service discovery)
+✔ Service Discovery → Kubernetes, AWS EC2, Consul, Docker
+✔ Alerting → Defines where Prometheus sends alerts
+✔ Rule Files → Loads alert rules from alert.rules.yml
+✔ Relabeling → Filters & modifies target labels.
+
+** Prometheus Setup for EKS cluster **
+--------------------------------------
+
+🚀 Full Prometheus Setup on EKS
+
+🔹 Prerequisites
+1️.EKS Cluster Ready (kubectl configured)
+2️.Helm Installed (helm version)
+3️.kubectl Installed (kubectl version)
+4️.IAM Role with EKS Permissions
+
+1️.Install Prometheus using Helm:
+
+Helm makes it easy to deploy Prometheus in Kubernetes.
+
+Step 1: Add the Helm Chart Repository
+sh
+Copy
+Edit
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+Step 2: Install Prometheus
+sh
+Copy
+Edit
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+✔ This deploys Prometheus, Alertmanager, and Grafana in monitoring namespace.
+✔ kube-prometheus-stack is a full monitoring solution.
+
+2️.Expose Prometheus Services:
+
+By default, Prometheus and Grafana run inside the cluster. To access them:
+
+Option 1: Port Forwarding (For Testing)
+sh
+Copy
+Edit
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090
+kubectl port-forward -n monitoring svc/prometheus-grafana 3000
+Prometheus UI: http://localhost:9090
+Grafana UI: http://localhost:3000
+Option 2: Expose via LoadBalancer (For Production)
+Modify values.yaml before installing Prometheus:
+
+yaml
+Copy
+Edit
+service:
+  type: LoadBalancer
+Apply the updated Helm release:
+
+sh
+Copy
+Edit
+helm upgrade prometheus prometheus-community/kube-prometheus-stack --namespace monitoring
+✔ This exposes Prometheus & Grafana with AWS LoadBalancer.
+
+3️.Configure Prometheus for EKS Monitoring:
+
+Prometheus needs to scrape Kubernetes metrics like CPU, memory, network, and pod status.
+
+Step 1: Check Available Services
+sh
+Copy
+Edit
+kubectl get svc -n monitoring
+You should see services like:
+
+prometheus-kube-prometheus-prometheus
+prometheus-kube-state-metrics
+prometheus-node-exporter
+Step 2: Verify Prometheus Service Discovery
+Run:
+
+sh
+Copy
+Edit
+kubectl exec -n monitoring -it $(kubectl get pod -n monitoring -l app.kubernetes.io/name=prometheus -o jsonpath="{.items[0].metadata.name}") -- sh
+Inside the Prometheus pod, check the discovered targets:
+
+sh
+Copy
+Edit
+wget -qO- http://localhost:9090/api/v1/targets | jq
+✔ Ensure that EKS nodes and pods are being scraped.
+
+4.Set Up Alertmanager:
+
+Alertmanager handles notifications to Slack, Email, PagerDuty, etc.
+
+Step 1: Create alertmanager.yaml ConfigMap
+yaml
+Copy
+Edit
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+data:
+  alertmanager.yml: |
+    route:
+      receiver: 'slack'
+    receivers:
+      - name: 'slack'
+        slack_configs:
+          - channel: '#alerts'
+            send_resolved: true
+            api_url: 'https://hooks.slack.com/services/YOUR_WEBHOOK_URL'
+✔ This configures alerts to a Slack channel.
+
+Step 2: Apply the ConfigMap
+sh
+Copy
+Edit
+kubectl apply -f alertmanager.yaml
+✔ Now, alerts will be sent to Slack when an issue occurs.
+
+5️.Configure Grafana Dashboards:
+
+Step 1: Get Grafana Admin Password
+sh
+Copy
+Edit
+kubectl get secret -n monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode
+✔ This gives you the default Grafana admin password.
+
+Step 2: Access Grafana
+sh
+Copy
+Edit
+kubectl port-forward -n monitoring svc/prometheus-grafana 3000
+Then open http://localhost:3000 and log in with:
+
+Username: admin
+Password: (from the previous command)
+
+Step 3: Add Prometheus as a Data Source
+
+1.Go to Grafana UI → Configuration → Data Sources
+2️.Click "Add data source"
+3️.Select Prometheus and enter:
+
+pgsql
+Copy
+Edit
+http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090
+
+4️.Click Save & Test:
+
+✔ Now Grafana can visualize Prometheus metrics.
+
+6.Create Custom Prometheus Alerts:
+
+Example: Alert for High CPU Usage
+Create a file cpu_alert.yml:
+
+yaml
+Copy
+Edit
+groups:
+  - name: high_cpu_usage
+    rules:
+      - alert: HighCPUUsage
+        expr: avg(rate(container_cpu_usage_seconds_total[5m])) by (container) > 0.8
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High CPU usage detected on {{ $labels.container }}"
+Apply it:
+
+sh
+Copy
+Edit
+kubectl apply -f cpu_alert.yml
+✔ Triggers an alert when CPU usage exceeds 80% for 2 minutes.
+
+7.Monitor EKS Nodes and Pods:
+
+To monitor CPU, memory, and network usage, use PromQL queries in Prometheus UI or Grafana.
+
+Check Pod CPU Usage
+promql
+Copy
+Edit
+sum(rate(container_cpu_usage_seconds_total[5m])) by (pod)
+Check Memory Usage
+promql
+Copy
+Edit
+sum(container_memory_usage_bytes) by (pod)
+Check Running Pods
+promql
+Copy
+Edit
+count(kube_pod_info)
+✔ These queries help track cluster health.
+
+🚀 Summary: What We Did:
+
+✅ Installed Prometheus on EKS using Helm
+✅ Configured Prometheus to scrape EKS metrics
+✅ Set up Alertmanager for notifications
+✅ Exposed Prometheus and Grafana
+✅ Added a custom alert for high CPU usage.
